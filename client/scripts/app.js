@@ -29,7 +29,6 @@ class App {
       
       $('#roomSelect').change(function() {
         THIS.clearMessages();
-        console.log($('#roomSelect').val());
         $.ajax({
           url: THIS.server,
           type: 'GET',
@@ -79,6 +78,9 @@ class App {
       success: (data) => {
         $.each(data.results, (index, data = _.escape(data)) => {
           roomList.push(data.roomname);
+          //let currentUsername = 
+          //_.escape((data.username).replace([/\W/g], "ASDFASDFASDF"));
+          console.log('currentUsername', data.username.replace([/\W+/g], ''));
           if (!users[data.username]) {
             users[data.username] = [];
           } else {
@@ -91,13 +93,13 @@ class App {
             THIS.renderRoom(element);
           }
         });
-        console.log(users);
-
+        
+        //iterating over users object then iterating over the user's message array
         for (var user in users) {
-          console.log(user);
-          users[user].forEach(function(person) { 
+          users[user].forEach(function(msg) { 
+            //render each user and a msg
             THIS.renderUsername(user);
-            THIS.renderMessage(user, person);
+            THIS.renderMessage(user, msg);
           });
         }
       },
