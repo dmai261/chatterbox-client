@@ -17,7 +17,7 @@ class App {
         let newObj = {};
         newObj.username = THIS.username;
         newObj.text = $('#post').val();
-        newObj.roomname = THIS.room;
+        newObj.roomname = "HotBox";
         
         THIS.handleSubmit(newObj);
       });
@@ -76,21 +76,20 @@ class App {
       data: 'order=-createdAt',
       contentType: 'application/json',
       success: (data) => {
-        $.each(data.results, (index, data = _.escape(data)) => {
+        $.each(data.results, (index, data) => {
           roomList.push(data.roomname);
-          //let currentUsername = 
-          //_.escape((data.username).replace([/\W/g], "ASDFASDFASDF"));
-          console.log('currentUsername', data.username.replace([/\W+/g], ''));
-          if (!users[data.username]) {
-            users[data.username] = [];
+          let currentUsername = (data.username).replace(/[\W]/g, "");
+          //console.log('currentUsername', currentUsername);
+          if (!users[currentUsername]) {
+            users[currentUsername] = [];
           } else {
-            users[data.username].push(data.text);
+            users[currentUsername].push(data.text);
           }
         });
 
         _.uniq(roomList).forEach(function(element) {
           if (element) {
-            THIS.renderRoom(element);
+            THIS.renderRoom(_.escape(element));
           }
         });
         
@@ -98,8 +97,8 @@ class App {
         for (var user in users) {
           users[user].forEach(function(msg) { 
             //render each user and a msg
-            THIS.renderUsername(user);
-            THIS.renderMessage(user, msg);
+            THIS.renderUsername(_.escape(user));
+            THIS.renderMessage(_.escape(user), _.escape(msg));
           });
         }
       },
